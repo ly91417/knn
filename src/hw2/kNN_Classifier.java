@@ -16,7 +16,7 @@ public class kNN_Classifier extends classifier{
 	private boolean regression;
 	private Instances trainSet;
 	private PriorityQueue<example> pq;
-	private double[] attributeValues;
+	private String[] attributeValues;
 	public kNN_Classifier(int k) {
 		this.k = k;
 		this.pq = new PriorityQueue<example>(k,new ExampleComparator());
@@ -36,9 +36,11 @@ public class kNN_Classifier extends classifier{
 			this.regression = false;
 		}
 		int numAttributes = trainSet.classAttribute().numValues();
-		this.attributeValues = new double[numAttributes];
-		for (int i = 0; i < numAttributes; i++) {
-			attributeValues[i] = Double.valueOf(trainSet.attribute(i).name());
+		this.attributeValues = new String[numAttributes];
+		//TODO BUG HERE
+		for (int i = 0; i < numAttributes-1; i++) {
+			attributeValues[i] = trainSet.attribute(i).name();
+			System.out.println(attributeValues[i]);
 		}
 	}
 	/*getter of train_set*/
