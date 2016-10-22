@@ -33,7 +33,11 @@ public class HW2 {
 			System.out.println("k value : " + k);
 			double sum = 0;
 			for(int i =0; i < numOfExample; i++) {
-				System.out.println("Predicted value : " + regResult.get(i) + "	Actual value : " + (double) test_set.instance(i).classValue());
+				System.out.print("Predicted value : ");
+				System.out.printf("%.6f",regResult.get(i)); 
+				System.out.print("	Actual value : ");
+				System.out.printf("%.6f",(double) test_set.instance(i).classValue());
+				System.out.println();
 				sum += regResult.get(i);
 			}
 			double average = sum/numOfExample;

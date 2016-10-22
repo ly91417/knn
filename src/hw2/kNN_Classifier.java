@@ -50,13 +50,16 @@ public class kNN_Classifier extends classifier{
 	 ***/
 	protected double get_numerical_distance(Instance i1, Instance i2) {
 		double distanceSquare = Double.MAX_VALUE;
-
-		for(int i = 0; i < i1.numAttributes(); i++){
+		for(int i = 0; i < i1.numAttributes()-1; i++){
 			if(distanceSquare == Double.MAX_VALUE) {
 				distanceSquare = 0;
 			}
-			distanceSquare += Math.pow((Double.valueOf(i1.value(i)) - Double.valueOf(i2.value(i))), 2);
+			distanceSquare += Math.pow(
+								Math.abs(
+										(Double.valueOf(i1.value(i)) - Double.valueOf(i2.value(i)))
+										), 2);	
 		}
+//		System.out.println(Math.sqrt(distanceSquare));
 		assert(distanceSquare != Double.MAX_VALUE) ;
 		return Math.sqrt(distanceSquare);
 	}
@@ -65,7 +68,7 @@ public class kNN_Classifier extends classifier{
 	 * */
 	protected double get_nominal_distance(Instance i1, Instance i2) {
 		int difference = Integer.MAX_VALUE;
-		for (int i = 0; i < i1.numAttributes(); i++) {
+		for (int i = 0; i < i1.numAttributes()-1; i++) {
 			if(difference == Integer.MAX_VALUE) {
 				difference = 0;
 			}
@@ -94,7 +97,7 @@ public class kNN_Classifier extends classifier{
 			for (int i = 0; i < numExample; i++ ) {
 				Instance temp = this.trainSet.get(i);
 				example e = new example(temp, this.get_numerical_distance(in, temp));
-				pq.offer(e);
+				pq.add(e);
 				if(pq.size() > k) {
 					//TODO to verify the remove function work or not
 					pq.poll();
@@ -105,7 +108,7 @@ public class kNN_Classifier extends classifier{
 			for (int i = 0; i < numExample; i++ ) {
 				Instance temp = this.trainSet.get(i);
 				example e = new example(temp, this.get_nominal_distance(in, temp));
-				pq.offer(e);
+				pq.add(e);
 				if(pq.size() > k) {
 					pq.poll();
 				}
@@ -136,7 +139,7 @@ public class kNN_Classifier extends classifier{
 			if(distance == Double.MAX_VALUE) {
 				distance = 0;
 			}
-			distance +=pq.poll().getDistance(); 
+			distance +=pq.poll().getInstance().classValue(); 
 		}
 		return distance/numOfElements;
 	}
