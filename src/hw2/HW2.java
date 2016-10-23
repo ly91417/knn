@@ -40,13 +40,13 @@ public class HW2 {
 				System.out.println();
 				sum += regResult.get(i);
 			}
-			double average = sum/numOfExample;
+			double average = sum/(double)numOfExample;
 			double absErrorSum = 0;
 			for(int i =0; i < numOfExample; i++) {
 				double error = regResult.get(i) - test_set.instance(i).classValue();
 				absErrorSum += Math.abs(error);
 			}
-			double mean = absErrorSum/numOfExample;
+			double mean = absErrorSum/(double)numOfExample;
 			System.out.println("Mean absolute error : " + mean);
 			System.out.println("Total number of instances : " + numOfExample);
 		}else {
@@ -72,6 +72,7 @@ public class HW2 {
 			}
 			System.out.println("Number of correctly classified instances : " + numOfCorrect);
 			System.out.println("Total number of instances : " + numOfExample);
+			System.out.println("Accuracy : " + (double) numOfCorrect/(double) numOfExample );
 		}
 		
 	}

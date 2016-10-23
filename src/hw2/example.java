@@ -24,6 +24,6 @@ public class example implements Comparable<example>{
 	}
 	public int compareTo(example o) {
 		// TODO Auto-generated method stub
-		return (int) this.distance - (int) o.distance;
+		return (int) o.distance - (int) this.distance;
 	}
 }

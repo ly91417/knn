@@ -19,7 +19,7 @@ public class kNN_Classifier extends classifier{
 	private String[] attributeValues;
 	public kNN_Classifier(int k) {
 		this.k = k;
-		this.pq = new PriorityQueue<example>(k,new ExampleComparator());
+		this.pq = new PriorityQueue<example>(k,Collections.reverseOrder());
 	}
 	/*
 	 * Constructor with integer k specify the nearest k neighbors and the
@@ -37,7 +37,7 @@ public class kNN_Classifier extends classifier{
 		}
 		int numAttributes = trainSet.classAttribute().numValues();
 		this.attributeValues = new String[numAttributes];
-		//TODO BUG HERE
+		
 		for (int i = 0; i < numAttributes-1; i++) {
 			attributeValues[i] = trainSet.attribute(i).name();
 		}
@@ -56,18 +56,17 @@ public class kNN_Classifier extends classifier{
 				distanceSquare = 0;
 			}
 			distanceSquare += Math.pow(
-								Math.abs(
+								
 										(Double.valueOf(i1.value(i)) - Double.valueOf(i2.value(i)))
-										), 2);	
+										, 2);	
 		}
-//		System.out.println(Math.sqrt(distanceSquare));
 		assert(distanceSquare != Double.MAX_VALUE) ;
 		return Math.sqrt(distanceSquare);
 	}
 	/*	get distance of two nominal instances
 	 * 
 	 * */
-	protected double get_nominal_distance(Instance i1, Instance i2) {
+	protected int get_nominal_distance(Instance i1, Instance i2) {
 		int difference = Integer.MAX_VALUE;
 		for (int i = 0; i < i1.numAttributes()-1; i++) {
 			if(difference == Integer.MAX_VALUE) {
@@ -80,7 +79,7 @@ public class kNN_Classifier extends classifier{
 			difference++;
 		}
 		assert(difference >= 0);
-		return (double) difference;
+		return difference;
 	}
 	/*	get distance of two instances
 	 * */
@@ -89,7 +88,7 @@ public class kNN_Classifier extends classifier{
 			return get_numerical_distance(e1, e2);
 		}
 		else{
-			return get_nominal_distance(e1,e2);
+			return (double) get_nominal_distance(e1,e2);
 		}
 	}
 	public void getKNeighbors(Instance in) {
@@ -97,21 +96,39 @@ public class kNN_Classifier extends classifier{
 			int numExample = this.trainSet.numInstances();
 			for (int i = 0; i < numExample; i++ ) {
 				Instance temp = this.trainSet.get(i);
-				example e = new example(temp, this.get_numerical_distance(in, temp));
-				pq.add(e);
-				if(pq.size() > k) {
-					//TODO to verify the remove function work or not
-					pq.poll();
+				double distance = this.get_numerical_distance(in, temp);
+				example e = new example(temp, distance);
+				if(pq.peek() == null){
+					pq.offer(e);
+				}else {
+					example temp1 = pq.peek();
+					if(distance <  temp1.getDistance()) {
+						pq.offer(e);
+					}
+					if(pq.size() > k) {
+						//TODO to verify the remove function work or not
+						pq.poll();
+					}
 				}
+				
 			}
 		}else {
 			int numExample = this.trainSet.numInstances();
 			for (int i = 0; i < numExample; i++ ) {
 				Instance temp = this.trainSet.get(i);
-				example e = new example(temp, this.get_nominal_distance(in, temp));
-				pq.add(e);
-				if(pq.size() > k) {
-					pq.poll();
+				double distance = this.get_nominal_distance(in, temp);
+				example e = new example(temp, distance);
+				if(pq.peek() == null){
+					pq.offer(e);
+				}else {
+					example temp1 = pq.peek();
+					if(distance <  temp1.getDistance()) {
+						pq.offer(e);
+					}
+					if(pq.size() > k) {
+						//TODO to verify the remove function work or not
+						pq.poll();
+					}
 				}
 			}
 		}
@@ -126,7 +143,7 @@ public class kNN_Classifier extends classifier{
 		}else {
 			pq = new PriorityQueue<example>(k);
 			getKNeighbors(e);
-			return this.classifyNominal(e);
+			return (double) this.classifyNominal(e);
 		}
 		
 	}
@@ -134,15 +151,17 @@ public class kNN_Classifier extends classifier{
 	 * */
 	private double classifyRegression(Instance e) {
 		// TODO Auto-generated method stub
-		double distance = Double.MAX_VALUE;
+		double value = Double.MAX_VALUE;
 		int numOfElements = pq.size();
 		while(pq.peek() != null) {
-			if(distance == Double.MAX_VALUE) {
-				distance = 0;
+			if(value == Double.MAX_VALUE) {
+				value = 0;
 			}
-			distance +=pq.poll().getInstance().classValue(); 
+			example ex = pq.poll();
+			value +=ex.getInstance().value(ex.getInstance().classAttribute()); 
 		}
-		return distance/numOfElements;
+		assert(value != Double.MAX_VALUE);
+		return value/(double)numOfElements;
 	}
 	public boolean isRegression() {
 		return regression;
@@ -152,7 +171,7 @@ public class kNN_Classifier extends classifier{
 	}
 	/*when classify the nominal values, return the majority vote
 	 * */
-	private double classifyNominal(Instance e) {
+	private int classifyNominal(Instance e) {
 		Attribute classLabel = this.trainSet.classAttribute();
 		int[] stat = new int[classLabel.numValues()];
 		int max = Integer.MIN_VALUE;
@@ -160,7 +179,6 @@ public class kNN_Classifier extends classifier{
 		while(pq.peek() != null) {
 			example in = pq.poll();
 			int classValue = (int) in.getInstance().classValue();
-			//System.out.println(classValue);
 			int vote = stat[classValue]++;
 			stat[classValue] = vote;
 			if (vote > max) {
