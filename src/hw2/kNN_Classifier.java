@@ -40,7 +40,6 @@ public class kNN_Classifier extends classifier{
 		//TODO BUG HERE
 		for (int i = 0; i < numAttributes-1; i++) {
 			attributeValues[i] = trainSet.attribute(i).name();
-			System.out.println(attributeValues[i]);
 		}
 	}
 	/*getter of train_set*/
@@ -154,19 +153,22 @@ public class kNN_Classifier extends classifier{
 	/*when classify the nominal values, return the majority vote
 	 * */
 	private double classifyNominal(Instance e) {
-		// TODO Auto-generated method stub
 		Attribute classLabel = this.trainSet.classAttribute();
-		ArrayList<Integer> stats = new ArrayList<Integer>(classLabel.numValues());
-		int k = pq.size();
-		int max = 0;
-		for (int i =0; i< k; i++) {
-			int classIndex = pq.poll().getInstance().classIndex();
-			int vote = stats.get(classIndex) + 1;
-			stats.set(classIndex, vote);
+		int[] stat = new int[classLabel.numValues()];
+		int max = Integer.MIN_VALUE;
+		int maxIndex = Integer.MIN_VALUE;
+		while(pq.peek() != null) {
+			example in = pq.poll();
+			int classValue = (int) in.getInstance().classValue();
+			//System.out.println(classValue);
+			int vote = stat[classValue]++;
+			stat[classValue] = vote;
 			if (vote > max) {
 				max = vote;
+				maxIndex = classValue;
 			}
 		}
-		return stats.indexOf(max);
+		assert(maxIndex != Integer.MIN_VALUE);
+		return maxIndex;
 	}
 }

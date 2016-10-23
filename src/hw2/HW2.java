@@ -46,16 +46,32 @@ public class HW2 {
 				double error = regResult.get(i) - test_set.instance(i).classValue();
 				absErrorSum += Math.abs(error);
 			}
-			average = absErrorSum/numOfExample;
-			System.out.println("Mean absolute error : " + average);
+			double mean = absErrorSum/numOfExample;
+			System.out.println("Mean absolute error : " + mean);
 			System.out.println("Total number of instances : " + numOfExample);
 		}else {
 			Attribute classAttribute = test_set.classAttribute();
 			for(int i =0; i < numOfExample; i++ ) {
 				Instance in = test_set.instance(i);
-				double classifiedReg = kc.classify(in);
-				nonResult.add(classAttribute.value((int)classifiedReg));
-			} 
+				double classifiedNon = kc.classify(in);
+				nonResult.add(classAttribute.value((int)classifiedNon));
+			}
+			System.out.println("k value : " + k);
+			int numOfCorrect = 0;
+			for(int i =0; i < numOfExample; i++ ) {
+				String pridicted = nonResult.get(i);
+				String actual = classAttribute.value((int)test_set.instance(i).classValue());
+				System.out.print("Predicted value : ");
+				System.out.print(pridicted); 
+				System.out.print("	Actual value : ");
+				System.out.print(actual);
+				System.out.println();
+				if(pridicted.equals(actual)) {
+					numOfCorrect++;
+				}
+			}
+			System.out.println("Number of correctly classified instances : " + numOfCorrect);
+			System.out.println("Total number of instances : " + numOfExample);
 		}
 		
 	}
