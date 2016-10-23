@@ -4,6 +4,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.Attribute;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ public class kNN_Classifier extends classifier{
 	private int k;
 	private boolean regression;
 	private Instances trainSet;
-	private PriorityQueue<example> pq;
+	private example[] pq;
 	private String[] attributeValues;
 	public kNN_Classifier(int k) {
 		this.k = k;
-		this.pq = new PriorityQueue<example>(k);
+		this.pq = new example[k];
 	}
 	/*
 	 * Constructor with integer k specify the nearest k neighbors and the
@@ -51,7 +52,7 @@ public class kNN_Classifier extends classifier{
 	 ***/
 	protected double get_numerical_distance(Instance i1, Instance i2) {
 		double distanceSquare = Double.MAX_VALUE;
-		for(int i = 0; i < i1.numAttributes()-1; i++){
+		for(int i = 0; i < i1.numAttributes() - 1; i++){
 			if(distanceSquare == Double.MAX_VALUE) {
 				distanceSquare = 0;
 			}
@@ -68,7 +69,7 @@ public class kNN_Classifier extends classifier{
 	 * */
 	protected int get_nominal_distance(Instance i1, Instance i2) {
 		int difference = Integer.MAX_VALUE;
-		for (int i = 0; i < i1.numAttributes()-1; i++) {
+		for (int i = 0; i < i1.numAttributes() - 1; i++) {
 			if(difference == Integer.MAX_VALUE) {
 				difference = 0;
 			}
@@ -92,22 +93,20 @@ public class kNN_Classifier extends classifier{
 		}
 	}
 	public void getKNeighbors(Instance in) {
-		pq = new PriorityQueue<example>(k);
+		pq = new example[k];
 			int numExample = this.trainSet.numInstances();
 			for (int i = 0; i < numExample; i++ ) {
 				Instance temp = this.trainSet.get(i);
-				double distance = this.get_numerical_distance(in, temp);
+				double distance = this.get_numerical_distance(temp,in);
 				example e = new example(temp, distance);
-				if(pq.peek() == null){
-					pq.offer(e);
+				if(pq[0]==null){
+					pq[0] = e;
+					continue;
 				}else {
-					example temp1 = pq.peek();
-					if(distance <= temp1.getDistance()) {
-						pq.offer(e);
-					}
-					if(pq.size() > k) {
-						//TODO to verify the remove function work or not
-						pq.poll();
+					example temp1 = pq[0];
+					if(distance < temp1.getDistance()) {
+						pq[0] = e;
+						Arrays.sort(pq);
 					}
 				}
 			}
@@ -127,16 +126,15 @@ public class kNN_Classifier extends classifier{
 	private double classifyRegression(Instance e) {
 		// TODO Auto-generated method stub
 		double value = Double.MAX_VALUE;
-		int numOfElements = pq.size();
-		while(pq.peek() != null) {
+		double average = 0;
+		for(example ex: pq) {
 			if(value == Double.MAX_VALUE) {
-				value = 0;
+				value =0;
 			}
-			example ex = pq.poll();
-			value +=ex.getInstance().classValue(); 
+			value += ex.getInstance().classValue();
 		}
-		assert(value != Double.MAX_VALUE);
-		return value/(double)numOfElements;
+		average = value / k;
+		return average;
 	}
 	public boolean isRegression() {
 		return regression;
@@ -151,13 +149,12 @@ public class kNN_Classifier extends classifier{
 		int[] stat = new int[classLabel.numValues()];
 		int max = Integer.MIN_VALUE;
 		int maxIndex = Integer.MIN_VALUE;
-		while(pq.peek() != null) {
-			example in = pq.poll();
-			int classValue = (int) in.getInstance().classValue();
-			stat[classValue]++;
-			if (stat[classValue] > max) {
-				max = stat[classValue];
-				maxIndex = classValue;
+		for(example ex: pq) {
+			Instance in = ex.getInstance();
+			int vote = ++stat[(int) in.classValue()];
+			if(vote > max) {
+				max = vote;
+				maxIndex = (int)in.classValue();
 			}
 		}
 		assert(maxIndex != Integer.MIN_VALUE);

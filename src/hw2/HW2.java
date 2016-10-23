@@ -48,7 +48,7 @@ public class HW2 {
 				double error = regResult.get(i) - test_set.instance(i).classValue();
 				absErrorSum += Math.abs(error);
 			}
-			double mean = absErrorSum/(double)numOfExample;
+			double mean = absErrorSum/numOfExample;
 			System.out.println("Mean absolute error : " + mean);
 			System.out.println("Total number of instances : " + numOfExample);
 		}else {
