@@ -19,7 +19,7 @@ public class kNN_Classifier extends classifier{
 	private String[] attributeValues;
 	public kNN_Classifier(int k) {
 		this.k = k;
-		this.pq = new PriorityQueue<example>(k,Collections.reverseOrder());
+		this.pq = new PriorityQueue<example>(k);
 	}
 	/*
 	 * Constructor with integer k specify the nearest k neighbors and the
@@ -102,7 +102,7 @@ public class kNN_Classifier extends classifier{
 					pq.offer(e);
 				}else {
 					example temp1 = pq.peek();
-					if(distance <  temp1.getDistance()) {
+					if(distance <= temp1.getDistance()) {
 						pq.offer(e);
 					}
 					if(pq.size() > k) {
