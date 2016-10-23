@@ -23,12 +23,14 @@ public class HW2 {
 		kNN_Classifier kc = new kNN_Classifier(k,train_set);
 		int numOfExample = test_set.numInstances();
 		ArrayList<Double> regResult = new ArrayList<Double>(numOfExample);
-		ArrayList<String> nonResult = new ArrayList<String>(numOfExample);
+		ArrayList<Integer> nomResultList = new ArrayList<Integer>(numOfExample);
+		//ArrayList<String> nonResult = new ArrayList<String>(numOfExample);
 		if (kc.isRegression()){
 			for(int i =0; i < numOfExample; i++ ) {
 				Instance in = test_set.instance(i);
 				double classifiedReg = kc.classify(in);
 				regResult.add(classifiedReg);
+				
 			} 
 			System.out.println("k value : " + k);
 			double sum = 0;
@@ -54,19 +56,20 @@ public class HW2 {
 			for(int i =0; i < numOfExample; i++ ) {
 				Instance in = test_set.instance(i);
 				double classifiedNom = kc.classify(in);
-				nonResult.add(classAttribute.value((int)classifiedNom));
+				//nonResult.add(classAttribute.value((int)classifiedNom));
+				nomResultList.add((int) classifiedNom);
 			}
 			System.out.println("k value : " + k);
 			int numOfCorrect = 0;
 			for(int i =0; i < numOfExample; i++ ) {
-				String pridicted = nonResult.get(i);
+				String pridicted = classAttribute.value(nomResultList.get(i));
 				String actual = classAttribute.value((int)test_set.instance(i).classValue());
 				System.out.print("Predicted value : ");
 				System.out.print(pridicted); 
 				System.out.print("	Actual value : ");
 				System.out.print(actual);
 				System.out.println();
-				if(pridicted.equals(actual)) {
+				if(nomResultList.get(i) == (int)test_set.instance(i).classValue()) {
 					numOfCorrect++;
 				}
 			}

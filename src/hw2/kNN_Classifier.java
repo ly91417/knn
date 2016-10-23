@@ -93,7 +93,6 @@ public class kNN_Classifier extends classifier{
 	}
 	public void getKNeighbors(Instance in) {
 		pq = new PriorityQueue<example>(k);
-		if(regression){
 			int numExample = this.trainSet.numInstances();
 			for (int i = 0; i < numExample; i++ ) {
 				Instance temp = this.trainSet.get(i);
@@ -111,28 +110,7 @@ public class kNN_Classifier extends classifier{
 						pq.poll();
 					}
 				}
-				
 			}
-		}else {
-			int numExample = this.trainSet.numInstances();
-			for (int i = 0; i < numExample; i++ ) {
-				Instance temp = this.trainSet.get(i);
-				double distance = this.get_nominal_distance(in, temp);
-				example e = new example(temp, distance);
-				if(pq.peek() == null){
-					pq.offer(e);
-				}else {
-					example temp1 = pq.peek();
-					if(distance <  temp1.getDistance()) {
-						pq.offer(e);
-					}
-					if(pq.size() > k) {
-						//TODO to verify the remove function work or not
-						pq.poll();
-					}
-				}
-			}
-		}
 	}
 	@Override
 	public double classify(Instance e) {
