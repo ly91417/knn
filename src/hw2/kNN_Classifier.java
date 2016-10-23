@@ -57,8 +57,8 @@ public class kNN_Classifier extends classifier{
 			}
 			distanceSquare += Math.pow(
 								
-										(Double.valueOf(i1.value(i)) - Double.valueOf(i2.value(i)))
-										, 2);	
+										Math.abs((Double.valueOf(i1.value(i)) - Double.valueOf(i2.value(i)))
+										), 2);	
 		}
 		assert(distanceSquare != Double.MAX_VALUE) ;
 		return Math.sqrt(distanceSquare);
