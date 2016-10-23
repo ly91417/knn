@@ -92,6 +92,7 @@ public class kNN_Classifier extends classifier{
 		}
 	}
 	public void getKNeighbors(Instance in) {
+		pq = new PriorityQueue<example>(k);
 		if(regression){
 			int numExample = this.trainSet.numInstances();
 			for (int i = 0; i < numExample; i++ ) {
@@ -136,16 +137,12 @@ public class kNN_Classifier extends classifier{
 	@Override
 	public double classify(Instance e) {
 		// TODO Auto-generated method stub
+		getKNeighbors(e);
 		if(regression ) {
-			pq = new PriorityQueue<example>(k);
-			getKNeighbors(e);
 			return this.classifyRegression(e);
 		}else {
-			pq = new PriorityQueue<example>(k);
-			getKNeighbors(e);
 			return (double) this.classifyNominal(e);
 		}
-		
 	}
 	/*when classify the regression value, return the numerical average
 	 * */
@@ -158,7 +155,7 @@ public class kNN_Classifier extends classifier{
 				value = 0;
 			}
 			example ex = pq.poll();
-			value +=ex.getInstance().value(ex.getInstance().classAttribute()); 
+			value +=ex.getInstance().classValue(); 
 		}
 		assert(value != Double.MAX_VALUE);
 		return value/(double)numOfElements;
@@ -179,10 +176,9 @@ public class kNN_Classifier extends classifier{
 		while(pq.peek() != null) {
 			example in = pq.poll();
 			int classValue = (int) in.getInstance().classValue();
-			int vote = stat[classValue]++;
-			stat[classValue] = vote;
-			if (vote > max) {
-				max = vote;
+			stat[classValue]++;
+			if (stat[classValue] > max) {
+				max = stat[classValue];
 				maxIndex = classValue;
 			}
 		}

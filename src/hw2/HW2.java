@@ -53,8 +53,8 @@ public class HW2 {
 			Attribute classAttribute = test_set.classAttribute();
 			for(int i =0; i < numOfExample; i++ ) {
 				Instance in = test_set.instance(i);
-				double classifiedNon = kc.classify(in);
-				nonResult.add(classAttribute.value((int)classifiedNon));
+				double classifiedNom = kc.classify(in);
+				nonResult.add(classAttribute.value((int)classifiedNom));
 			}
 			System.out.println("k value : " + k);
 			int numOfCorrect = 0;
