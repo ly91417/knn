@@ -13,23 +13,29 @@ test:
 	java -jar kNN.jar yeast_train.arff yeast_test.arff 3 >yeast3.out1
 	java -jar kNN.jar yeast_train.arff yeast_test.arff 5 >yeast5.out1
 	java -jar kNN.jar yeast_train.arff yeast_test.arff 7 >yeast7.out1
+	java -jar kNN-select.jar wine_train.arff wine_test.arff 3 5 7 >wine.out1
+	java -jar kNN-select.jar yeast_train.arff yeast_test.arff 3 5 7 >yeast.out1
 
 ##compare
 cp1:	
-	diff -u wine3.out wine3out1 > diff3wine.out1
+	diff -u wine3.out wine3.out1 > diff3wine.out1
 cp2:	
-	diff -u wine5.out wine5out1 > diff5wine.out1
+	diff -u wine5.out wine5.out1 > diff5wine.out1
 cp3:	
-	diff -u wine7.out wine7out1 > diff7wine.out1
+	diff -u wine7.out wine7.out1 > diff7wine.out1
 cp4:	
 	diff -u yeast3.out yeast3.out1 > diff3yeast.out1
 cp5:	
 	diff -u yeast5.out yeast5.out1 > diff5yeast.out1
 cp6:	
 	diff -u yeast7.out yeast7.out1 > diff7yeast.out1
+cp7:	
+	diff -u wine.out wine.out1 > diffwine.out2
+cp8:
+	diff -u yeast.out yeast.out1 > diffyeast.out2
 
 ###
 #clean
 ###
 clean:
-	rm -f *.out1
+	rm -f *.out1 *.out2 *~
