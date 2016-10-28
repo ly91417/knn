@@ -1,0 +1,27 @@
+###
+#
+#
+#
+#
+###
+
+##test
+test:
+	java -jar knn_part2.jar yeast_train.arff yeast_test.arff 1 >yeast1.out1
+	java -jar knn_part2.jar yeast_train.arff yeast_test.arff 5 >yeast5.out1
+	java -jar knn_part2.jar yeast_train.arff yeast_test.arff 10 >yeast10.out1
+	java -jar knn_part2.jar yeast_train.arff yeast_test.arff 20 >yeast20.out1
+	java -jar knn_part2.jar yeast_train.arff yeast_test.arff 30 >yeast30.out1
+	java -jar knn_part2.jar wine_train.arff wine_test.arff 1 >wine1.out1
+	java -jar knn_part2.jar wine_train.arff wine_test.arff 2 >wine2.out1
+	java -jar knn_part2.jar wine_train.arff wine_test.arff 3 >wine3.out1
+	java -jar knn_part2.jar wine_train.arff wine_test.arff 5 >wine5.out1
+	java -jar knn_part2.jar wine_train.arff wine_test.arff 10 >wine10.out1
+##compare
+
+
+###
+#clean
+###
+clean:
+	rm -f *.out1
