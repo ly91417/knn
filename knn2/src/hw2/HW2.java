@@ -22,9 +22,47 @@ public class HW2 {
 		Integer k1 = Integer.valueOf(args[2]);
 		Integer k2 = Integer.valueOf(args[3]);
 		Integer k3 = Integer.valueOf(args[4]);
-		int count1 = crossValidate(train_set, k1);
-		int count2 = crossValidate(train_set, k2);
-		int count3 = crossValidate(train_set, k3);
+		if(train_set.classAttribute().name().equals("class")) {
+			classificationProblem(train_set, test_set, k1, k2, k3);
+		}else if (train_set.classAttribute().name().equals("response")){
+			regressionProblem(train_set, test_set, k1, k2, k3);
+		}
+		
+	}
+
+	private static void regressionProblem(Instances train_set,
+			Instances test_set, Integer k1, Integer k2, Integer k3) {
+		double count1 = regressionCrossValidate(train_set, k1);
+		System.out.println("Mean absolute error for k = " + k1 + " : " + count1);
+		double count2 = regressionCrossValidate(train_set, k2);
+		System.out.println("Mean absolute error for k = " + k2 + " : " + count2);
+		double count3 = regressionCrossValidate(train_set, k3);
+		System.out.println("Mean absolute error for k = " + k3 + " : " + count3);
+		int[] kValues = {k1,k2,k3};
+		double[] count = {count1, count2, count3};
+		double min = Integer.MAX_VALUE;
+		int minIndex = Integer.MAX_VALUE;
+		for(int i = 0; i < 3; i++ ) {
+			if(count[i] < min) {
+				min = count[i];
+				minIndex = i;
+			}
+		}
+		assert(minIndex != Integer.MAX_VALUE) : "there is something wrong with your k values";
+		System.out.println("Best k value : " + kValues[minIndex]);
+		int numOfExample = test_set.numInstances();
+		kNN_Classifier kcn = new kNN_Classifier(kValues[minIndex],train_set);
+		print(test_set, k1, kcn, numOfExample);
+	}
+
+	private static void classificationProblem(Instances train_set,
+			Instances test_set, int k1, int k2, int k3) {
+		int count1 = classificationCrossValidate(train_set, k1);
+		System.out.println("Number of incorrectly classified instances for k = " + k1 + " : " + count1);
+		int count2 = classificationCrossValidate(train_set, k2);
+		System.out.println("Number of incorrectly classified instances for k = " + k2 + " : " + count2);
+		int count3 = classificationCrossValidate(train_set, k3);
+		System.out.println("Number of incorrectly classified instances for k = " + k3 + " : " + count3);
 		int[] kValues = {k1,k2,k3};
 		int[] count = {count1, count2, count3};
 		int min = Integer.MAX_VALUE;
@@ -41,8 +79,19 @@ public class HW2 {
 		kNN_Classifier kcn = new kNN_Classifier(kValues[minIndex],train_set);
 		print(test_set, k1, kcn, numOfExample);
 	}
-
-	private static int crossValidate(Instances train_set, Integer k) {
+	private static double regressionCrossValidate(Instances train_set, Integer k){
+		double MAE = 0;
+		int trainSetSize = train_set.numInstances();
+		for(int i = 0; i < trainSetSize; i++) {
+			Instance testInstance = train_set.instance(i);
+			Instances set = new Instances(train_set);
+			set.delete(i);
+			kNN_Classifier kcCross = new kNN_Classifier(k,set);
+			MAE += Math.abs(testInstance.classValue() - kcCross.classify(testInstance));
+		}
+		return MAE/(train_set.numInstances());
+	}
+	private static int classificationCrossValidate(Instances train_set, Integer k) {
 		int numIncorrect = 0;
 		int trainSetSize = train_set.numInstances();
 		for(int i = 0; i < trainSetSize; i++) {
@@ -55,7 +104,6 @@ public class HW2 {
 			}
 			numIncorrect++;
 		}
-		System.out.println("Number of incorrectly classified instances for k = " + k +" : " + numIncorrect);
 		return numIncorrect;
 	}
 	

@@ -7,12 +7,12 @@
 
 ##test
 test:
-	java -jar knn.jar wine_train.arff wine_test.arff 3 >wine3.out1
-	java -jar knn.jar wine_train.arff wine_test.arff 5 >wine5.out1
-	java -jar knn.jar wine_train.arff wine_test.arff 7 >wine7.out1
-	java -jar knn.jar yeast_train.arff yeast_test.arff 3 >yeast3.out1
-	java -jar knn.jar yeast_train.arff yeast_test.arff 5 >yeast5.out1
-	java -jar knn.jar yeast_train.arff yeast_test.arff 7 >yeast7.out1
+	java -jar kNN.jar wine_train.arff wine_test.arff 3 >wine3.out1
+	java -jar kNN.jar wine_train.arff wine_test.arff 5 >wine5.out1
+	java -jar kNN.jar wine_train.arff wine_test.arff 7 >wine7.out1
+	java -jar kNN.jar yeast_train.arff yeast_test.arff 3 >yeast3.out1
+	java -jar kNN.jar yeast_train.arff yeast_test.arff 5 >yeast5.out1
+	java -jar kNN.jar yeast_train.arff yeast_test.arff 7 >yeast7.out1
 
 ##compare
 cp1:	

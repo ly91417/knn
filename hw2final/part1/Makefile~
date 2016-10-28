@@ -20,9 +20,13 @@ cp1:
 cp2:	
 	diff -u wine5.out wine5out1 > diff5wine.out1
 cp3:	
-	diff -u yeast3.out yeast3.out1 > diff3yeast.out1
+	diff -u wine7.out wine7out1 > diff7wine.out1
 cp4:	
+	diff -u yeast3.out yeast3.out1 > diff3yeast.out1
+cp5:	
 	diff -u yeast5.out yeast5.out1 > diff5yeast.out1
+cp6:	
+	diff -u yeast7.out yeast7.out1 > diff7yeast.out1
 
 ###
 #clean

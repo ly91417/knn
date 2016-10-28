@@ -1,0 +1,1 @@
+java -jar kNN.jar $1 $2 $3

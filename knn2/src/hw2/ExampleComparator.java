@@ -1,5 +1,7 @@
 package hw2;
+
 import java.util.Comparator;
+
 public class ExampleComparator implements Comparator<example>{
 
 	public int compare(example o1, example o2) {
