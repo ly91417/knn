@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="lib" path="/afs/cs.wisc.edu/u/y/l/yli/Documents/workspace/CS760/hw2/src/hw2/weka.jar"/>
+	<classpathentry kind="lib" path="/afs/cs.wisc.edu/u/y/l/yli/Documents/workspace/CS760/hw2/src/weka.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
