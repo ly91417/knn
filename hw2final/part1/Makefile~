@@ -36,7 +36,7 @@ cp7:
 cp8:
 	diff -u yeast.out yeast.out1 > diffyeast.out2
 cpp3:
-	diff -u pp_3.out1 pp_3.txt > diffcpp3.out2
+	diff -u pp_3.txt pp_3.txt > diffcpp3.out2
 cpp357:
 	diff -u pp_357.txt pp_357.txt > diffcpp357.out2
 ###
